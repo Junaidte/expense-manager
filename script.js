@@ -1,33 +1,39 @@
-let expenses = JSON.parse(localStorage.getItem("expenses")) || [];
-
-function addExpense() {
-    let amount = document.getElementById("amount").value;
-    let note = document.getElementById("note").value;
-
-    if (amount === "") return;
-
-    expenses.push({ amount: Number(amount), note: note });
-    localStorage.setItem("expenses", JSON.stringify(expenses));
-
-    document.getElementById("amount").value = "";
-    document.getElementById("note").value = "";
-
-    showExpenses();
+body {
+    font-family: Arial;
+    background: #f2f2f2;
 }
 
-function showExpenses() {
-    let list = document.getElementById("list");
-    let total = 0;
-    list.innerHTML = "";
-
-    expenses.forEach(e => {
-        total += e.amount;
-        let li = document.createElement("li");
-        li.textContent = `${e.note} - Rs ${e.amount}`;
-        list.appendChild(li);
-    });
-
-    document.getElementById("total").innerText = total;
+.container {
+    background: white;
+    max-width: 350px;
+    margin: 30px auto;
+    padding: 20px;
+    border-radius: 12px;
 }
 
-showExpenses();
+input, button {
+    width: 100%;
+    margin: 6px 0;
+    padding: 10px;
+}
+
+button {
+    background: green;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 6px;
+}
+
+li {
+    margin: 6px 0;
+    font-size: 14px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.delete {
+    color: red;
+    cursor: pointer;
+    font-weight: bold;
+}
