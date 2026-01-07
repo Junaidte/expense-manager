@@ -1,39 +1,60 @@
-body {
-    font-family: Arial;
-    background: #f2f2f2;
+let expenses = JSON.parse(localStorage.getItem("expenses")) || [];
+
+function addExpense() {
+    let amount = document.getElementById("amount").value;
+    let note = document.getElementById("note").value;
+
+    if (amount === "") return;
+
+    let now = new Date();
+
+    expenses.push({
+        amount: Number(amount),
+        note: note,
+        date: now.toLocaleString(),
+        month: now.getMonth(),
+        year: now.getFullYear()
+    });
+
+    localStorage.setItem("expenses", JSON.stringify(expenses));
+
+    document.getElementById("amount").value = "";
+    document.getElementById("note").value = "";
+
+    showExpenses();
 }
 
-.container {
-    background: white;
-    max-width: 350px;
-    margin: 30px auto;
-    padding: 20px;
-    border-radius: 12px;
+function deleteExpense(index) {
+    expenses.splice(index, 1);
+    localStorage.setItem("expenses", JSON.stringify(expenses));
+    showExpenses();
 }
 
-input, button {
-    width: 100%;
-    margin: 6px 0;
-    padding: 10px;
+function showExpenses() {
+    let list = document.getElementById("list");
+    let total = 0;
+    let monthTotal = 0;
+
+    let now = new Date();
+    list.innerHTML = "";
+
+    expenses.forEach((e, index) => {
+        total += e.amount;
+
+        if (e.month === now.getMonth() && e.year === now.getFullYear()) {
+            monthTotal += e.amount;
+        }
+
+        let li = document.createElement("li");
+        li.innerHTML = `
+            <span>${e.note} - Rs ${e.amount}<br><small>${e.date}</small></span>
+            <span class="delete" onclick="deleteExpense(${index})">❌</span>
+        `;
+        list.appendChild(li);
+    });
+
+    document.getElementById("total").innerText = total;
+    document.getElementById("monthTotal").innerText = monthTotal;
 }
 
-button {
-    background: green;
-    color: white;
-    border: none;
-    cursor: pointer;
-    border-radius: 6px;
-}
-
-li {
-    margin: 6px 0;
-    font-size: 14px;
-    display: flex;
-    justify-content: space-between;
-}
-
-.delete {
-    color: red;
-    cursor: pointer;
-    font-weight: bold;
-}
+showExpenses();
